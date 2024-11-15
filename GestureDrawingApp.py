@@ -44,11 +44,23 @@ class GestureDrawingApp:
 		self.image_frame = tk.Frame(root)
 		self.image_frame.pack(fill="both", expand=True)
 
+		time_control_frame = tk.Frame(self.image_frame)
+		time_control_frame.pack(side="right", anchor="n")
+
 		self.control_frame = tk.Frame(root)
 		self.control_frame.pack(side="bottom", fill="x", pady=10)
 
 		self.timer_remaining_label = tk.Label(self.image_frame, text="", font=("Arial", 16))
 		self.timer_remaining_label.pack(anchor="n")
+
+		# Time label
+		self.time_label = tk.Label(time_control_frame, text="Time")
+		self.time_label.pack()  # Center-align the label
+
+		# Timer slider
+		self.timer_slider = tk.Scale(time_control_frame, from_=180, to=5, resolution=5, orient="vertical", command=self.update_timer)
+		self.timer_slider.set(self.interval)
+		self.timer_slider.pack(padx=(0,25))
 
 		# Image label
 		self.image_label = tk.Label(self.image_frame)
@@ -59,21 +71,14 @@ class GestureDrawingApp:
 		self.pause_label.bind("<Button-1>", self.toggle_pause)
 		self.pause_label.place_forget()
 
-		# Timer label and control slider
-		self.time_label = tk.Label(self.control_frame, text=f"Time:")
-		self.time_label.pack(side="left", padx=10)
-		self.timer_slider = tk.Scale(self.control_frame, from_=5, to=180, resolution=5, orient="horizontal", command=self.update_timer)
-		self.timer_slider.set(self.interval)
-		self.timer_slider.pack(side="left", padx=10)
-
 		# Control buttons
 		self.start_button = tk.Button(self.control_frame, text="Start", command=self.start_or_unpause)
 		self.start_button.pack(side="left", padx=10)
 
-		self.back_button = tk.Button(self.control_frame, text="Back", command=lambda: self.reset_slideshow(-1))
+		self.back_button = tk.Button(self.control_frame, text="Back", command=lambda: self.reset_slideshow(True, -1))
 		self.back_button.pack(side="left", padx=10)
 
-		self.forward_button = tk.Button(self.control_frame, text="Forward", command= lambda: self.reset_slideshow(1))
+		self.forward_button = tk.Button(self.control_frame, text="Forward", command= lambda: self.reset_slideshow(True, 1))
 		self.forward_button.pack(side="left", padx=10)
 
 		self.pause_button = tk.Button(self.control_frame, text="Pause", command=self.toggle_pause)
@@ -212,7 +217,7 @@ class GestureDrawingApp:
 		elif self.is_paused:
 			self.toggle_pause()
 			if self.remaining_time != self.interval:
-				self.remaining_time = self.interval  # Reset timer to interval duration
+				self.remaining_time = self.interval
 		else:
 			self.image_paths = self.load_images(self.image_folder)
 			self.reset_slideshow()
@@ -256,7 +261,7 @@ class GestureDrawingApp:
 		self.pause_label.place(x=10, y=10)  # Show at top-left corner
 		self.update_remaining_time()
 
-	def reset_slideshow(self, index_direction=0):
+	def reset_slideshow(self, pause=False, index_direction=0):
 		"""Reset the slideshow and stop any existing countdown."""
 		self.is_running = True
 		self.is_paused = False
@@ -264,7 +269,7 @@ class GestureDrawingApp:
 		self.pause_label.place_forget()
 		self.remaining_time = self.interval
 		self.update_remaining_time()
-		self.show_next_image(index_direction)
+		self.show_next_image(pause, index_direction)
 
 		if self.countdown_after_id is not None:
 			self.root.after_cancel(self.countdown_after_id)
@@ -287,9 +292,8 @@ class GestureDrawingApp:
 		self.show_image(self.current_image_index)
 
 
-	def show_next_image(self, index=0):
-		"""Show the next image in the queue and update the index."""
-		if index != 0:
+	def show_next_image(self, pause=False, index=1):
+		if pause:
 			self.toggle_pause()
 		if self.image_paths:
 			self.current_image_index = (self.current_image_index + index) % len(self.image_paths)
