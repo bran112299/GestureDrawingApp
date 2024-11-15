@@ -47,6 +47,9 @@ class GestureDrawingApp:
 		self.control_frame = tk.Frame(root)
 		self.control_frame.pack(side="bottom", fill="x", pady=10)
 
+		self.timer_remaining_label = tk.Label(self.image_frame, text="", font=("Arial", 16))
+		self.timer_remaining_label.pack(anchor="n")
+
 		# Image label
 		self.image_label = tk.Label(self.image_frame)
 		self.image_label.pack(fill="both", expand=True)
@@ -57,8 +60,7 @@ class GestureDrawingApp:
 		self.pause_label.place_forget()
 
 		# Timer label and control slider
-		self.timer_remaining_label = tk.Label(self.control_frame, text=f"Time left: {self.remaining_time} seconds")
-		self.timer_remaining_label.pack(side="left", padx=10)
+
 
 		self.time_label = tk.Label(self.control_frame, text=f"Time:")
 		self.time_label.pack(side="left", padx=10)
@@ -243,7 +245,7 @@ class GestureDrawingApp:
 
 	def update_remaining_time(self):
 		"""Update the remaining time display."""
-		self.timer_remaining_label.config(text=f"Time left: {abs(self.remaining_time):.1f} seconds")
+		self.timer_remaining_label.config(text=f"{abs(self.remaining_time):.1f}")
 
 	def pause_slideshow(self):
 		"""Pause the slideshow, displaying a Pause message."""
