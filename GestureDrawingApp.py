@@ -60,8 +60,6 @@ class GestureDrawingApp:
 		self.pause_label.place_forget()
 
 		# Timer label and control slider
-
-
 		self.time_label = tk.Label(self.control_frame, text=f"Time:")
 		self.time_label.pack(side="left", padx=10)
 		self.timer_slider = tk.Scale(self.control_frame, from_=5, to=180, resolution=5, orient="horizontal", command=self.update_timer)
@@ -211,7 +209,10 @@ class GestureDrawingApp:
 	def start_or_unpause(self):
 		"""Start the slideshow or unpause it if it's already running."""
 		if not self.is_running: self.start_slideshow()
-		elif self.is_paused: self.toggle_pause()
+		elif self.is_paused:
+			self.toggle_pause()
+			if self.remaining_time != self.interval:
+				self.remaining_time = self.interval  # Reset timer to interval duration
 		else:
 			self.image_paths = self.load_images(self.image_folder)
 			self.reset_slideshow()
@@ -221,7 +222,9 @@ class GestureDrawingApp:
 		self.is_running = True
 		self.is_paused = False
 		self.pause_label.place_forget()
-		self.show_next_image()
+		self.remaining_time = self.interval
+		self.update_remaining_time()
+		# self.show_next_image()
 		self.run_slideshow()  # Start the slideshow loop
 
 	def run_slideshow(self):
@@ -282,7 +285,6 @@ class GestureDrawingApp:
 	def update_highlight(self, value):
 		self.highlight_threshold = int(value)
 		self.show_image(self.current_image_index)
-
 
 
 	def show_next_image(self, index=0):
