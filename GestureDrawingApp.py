@@ -41,16 +41,16 @@ class GestureDrawingApp:
 
 	def init_ui(self):
 		# Create UI layout frames
-		self.image_frame = tk.Frame(root)
-		self.image_frame.pack(fill="both", expand=True)
+		image_frame = tk.Frame(root)
+		image_frame.pack(fill="both", expand=True)
 
-		time_control_frame = tk.Frame(self.image_frame)
+		time_control_frame = tk.Frame(image_frame)
 		time_control_frame.pack(side="right", anchor="n")
 
-		self.control_frame = tk.Frame(root)
-		self.control_frame.pack(side="bottom", fill="x", pady=10)
+		control_frame = tk.Frame(root)
+		control_frame.pack(side="bottom", fill="x", pady=10)
 
-		self.timer_remaining_label = tk.Label(self.image_frame, text="", font=("Arial", 16))
+		self.timer_remaining_label = tk.Label(image_frame, text="", font=("Arial", 16))
 		self.timer_remaining_label.pack(anchor="n")
 
 		# Time label
@@ -63,7 +63,7 @@ class GestureDrawingApp:
 		self.timer_slider.pack(padx=(0,25))
 
 		# Image label
-		self.image_label = tk.Label(self.image_frame)
+		self.image_label = tk.Label(image_frame)
 		self.image_label.pack(fill="both", expand=True)
 
 		# Pause indicator label
@@ -72,35 +72,35 @@ class GestureDrawingApp:
 		self.pause_label.place_forget()
 
 		# Control buttons
-		self.start_button = tk.Button(self.control_frame, text="Start", command=self.start_or_unpause)
+		self.start_button = tk.Button(control_frame, text="Start", command=self.start_or_unpause)
 		self.start_button.pack(side="left", padx=10)
 
-		self.back_button = tk.Button(self.control_frame, text="Back", command=lambda: self.reset_slideshow(True, -1))
+		self.back_button = tk.Button(control_frame, text="Back", command=lambda: self.reset_slideshow(True, -1))
 		self.back_button.pack(side="left", padx=10)
 
-		self.forward_button = tk.Button(self.control_frame, text="Forward", command= lambda: self.reset_slideshow(True, 1))
+		self.forward_button = tk.Button(control_frame, text="Forward", command= lambda: self.reset_slideshow(True, 1))
 		self.forward_button.pack(side="left", padx=10)
 
-		self.pause_button = tk.Button(self.control_frame, text="Pause", command=self.toggle_pause)
+		self.pause_button = tk.Button(control_frame, text="Pause", command=self.toggle_pause)
 		self.pause_button.pack(side="left", padx=10)
 
-		self.tone_label = tk.Label(self.control_frame, text="Tone:")
+		self.tone_label = tk.Label(control_frame, text="Tone:")
 		self.tone_label.pack(side="left", padx=10)
 		self.tone_options = ["Off", 2, 3]  # Tone options
-		self.tone_combobox = ttk.Combobox(self.control_frame, values=self.tone_options, state="readonly", width=5)
+		self.tone_combobox = ttk.Combobox(control_frame, values=self.tone_options, state="readonly", width=5)
 		self.tone_combobox.pack(side="left", padx=10)
 		self.tone_combobox.bind("<<ComboboxSelected>>", self.toggle_tone)
 
-		self.folder_button = tk.Button(self.control_frame, text="Load Folder", command=self.load_folder)
+		self.folder_button = tk.Button(control_frame, text="Load Folder", command=self.load_folder)
 		self.folder_button.pack(side="left", padx=10)
 
-		# self.time_label = tk.Label(self.control_frame, text=f"shadow_threshold")
+		# self.time_label = tk.Label(control_frame, text=f"shadow_threshold")
 		# self.time_label.pack(side="left", padx=10)
-		self.shadow_threshold_slider = tk.Scale(self.control_frame, from_=0, to=255, resolution=5, orient="horizontal", command=self.update_shadow)
+		self.shadow_threshold_slider = tk.Scale(control_frame, from_=0, to=255, resolution=5, orient="horizontal", command=self.update_shadow)
 		self.shadow_threshold_slider.set(self.shadow_threshold)
 		self.shadow_threshold_slider.pack(side="left", padx=10)
 
-		self.highlight_threshold_slider = tk.Scale(self.control_frame, from_=0, to=255, resolution=5, orient="horizontal", command=self.update_highlight)
+		self.highlight_threshold_slider = tk.Scale(control_frame, from_=0, to=255, resolution=5, orient="horizontal", command=self.update_highlight)
 		self.highlight_threshold_slider.set(self.highlight_threshold)
 		self.highlight_threshold_slider.pack(side="left", padx=10)
 
@@ -181,8 +181,6 @@ class GestureDrawingApp:
 				return toned_image
 			except:
 				return image
-
-
 
 
 		"""Display an image in the Tkinter window."""
@@ -300,7 +298,7 @@ class GestureDrawingApp:
 			self.show_image(self.current_image_index)
 
 	def exit_program(self):
-		self.root.quit()  # Gracefully quit the Tkinter app
+		self.root.quit()
 
 if __name__ == "__main__":
 	root = tk.Tk()
